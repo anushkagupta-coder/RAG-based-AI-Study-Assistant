@@ -1,66 +1,70 @@
+import streamlit as st
 from pypdf import PdfReader
 from langchain_text_splitters import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import google.generativeai as genai
 
-import streamlit as st
-import google.generativeai as genai
-
+# API KEY (Cloud)
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
-st.write("API KEY LOADED:", "GEMINI_API_KEY" in st.secrets)
 
-# Read PDF
-reader = PdfReader("rag_project/sample.pdf")
+st.title("📚 AI Study Assistant 🤖")
 
-text = ""
-for page in reader.pages:
-    text += page.extract_text()
+# Upload PDF
+uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
 
-# Split text
-text_splitter = CharacterTextSplitter(
-    separator="\n",
-    chunk_size=500,
-    chunk_overlap=100
-)
+# Store vector DB
+if uploaded_file:
+    reader = PdfReader(uploaded_file)
 
-chunks = text_splitter.split_text(text)
+    text = ""
+    for page in reader.pages:
+        text += page.extract_text()
 
-print("Total chunks:", len(chunks))
+    splitter = CharacterTextSplitter(
+        separator="\n",
+        chunk_size=500,
+        chunk_overlap=100
+    )
+    chunks = splitter.split_text(text)
 
-# Embeddings + Vector DB
-embeddings = HuggingFaceEmbeddings()
-vectorstore = FAISS.from_texts(chunks, embeddings)
+    embeddings = HuggingFaceEmbeddings()
+    st.session_state.vectorstore = FAISS.from_texts(chunks, embeddings)
 
-print("Vector DB created successfully!")
+    st.success("PDF processed successfully!")
 
-# Gemini model
-model = genai.GenerativeModel("gemini-2.5-flash")
+# User input
+query = st.text_input("Ask a question:")
 
-# Ask question
-query = input("Ask a question: ")
+# Button
+if st.button("Get Answer"):
+    if "vectorstore" not in st.session_state:
+        st.warning("Please upload a PDF first!")
+    else:
+        docs = st.session_state.vectorstore.similarity_search(query)
 
-docs = vectorstore.similarity_search(query)
+        st.write("Docs found:", len(docs))  # debug
 
-context = ""
-for doc in docs:
-    context += doc.page_content + "\n"
+        context = ""
+        for doc in docs:
+            context += doc.page_content + "\n"
 
-# Better prompt
-prompt = f"""
-You are an AI assistant.
+        model = genai.GenerativeModel("gemini-1.5-flash")
 
-Answer ONLY from the context below.
-Give a short and clear answer.
+        prompt = f"""
+        You are an AI assistant.
 
-Context:
-{context}
+        Answer ONLY from the context below.
+        Give a short and clear answer.
 
-Question:
-{query}
-"""
+        Context:
+        {context}
 
-response = model.generate_content(prompt)
+        Question:
+        {query}
+        """
 
-print("\nAI Answer:\n")
-print(response.text)
+        response = model.generate_content(prompt)
+
+        st.subheader("🤖 AI Answer:")
+        st.write(response.text)
