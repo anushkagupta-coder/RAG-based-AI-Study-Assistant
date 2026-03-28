@@ -1,6 +1,6 @@
 from pypdf import PdfReader
 
-reader = PdfReader("sample.pdf")  # apna PDF naam yaha daalna
+reader = PdfReader("rag_project/sample.pdf")  # apna PDF naam yaha daalna
 
 text = ""
 for page in reader.pages:
