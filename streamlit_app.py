@@ -48,17 +48,17 @@ if st.button("Get Answer"):
         model = genai.GenerativeModel("gemini-2.5-flash")  # safer
 
         prompt = f"""
-        You are an AI assistant.
+        You are an expert teacher.
 
-        Answer ONLY from the context below.
-        Give a short and clear answer.
+        If the answer is present in the context, use it.
+        If not, generate a correct and detailed answer using your own knowledge.
 
         Context:
         {context}
 
         Question:
         {query}
-        """
+"""
         response = model.generate_content(prompt)
 
         if response and hasattr(response, "text") and response.text:
