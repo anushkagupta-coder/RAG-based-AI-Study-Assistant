@@ -13,9 +13,9 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
 st.title("📚 AI Study Assistant 🤖")
 
-# Upload PDF
 uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
 
+# 🔥 STORE VECTORSTORE IN SESSION
 if uploaded_file:
     reader = PdfReader(uploaded_file)
     
@@ -23,7 +23,6 @@ if uploaded_file:
     for page in reader.pages:
         text += page.extract_text()
 
-    # Split text
     splitter = CharacterTextSplitter(
         separator="\n",
         chunk_size=500,
@@ -31,37 +30,40 @@ if uploaded_file:
     )
     chunks = splitter.split_text(text)
 
-    # Embeddings + Vector DB
     embeddings = HuggingFaceEmbeddings()
-    vectorstore = FAISS.from_texts(chunks, embeddings)
+    st.session_state.vectorstore = FAISS.from_texts(chunks, embeddings)
 
     st.success("PDF processed successfully!")
 
-    # User query
-    query = st.text_input("Ask a question:")
+# Query input
+query = st.text_input("Ask a question:")
 
+# Button logic
 if st.button("Get Answer"):
-    docs = vectorstore.similarity_search(query)
+    if "vectorstore" not in st.session_state:
+        st.warning("Please upload a PDF first!")
+    else:
+        docs = st.session_state.vectorstore.similarity_search(query)
 
-    context = ""
-    for doc in docs:
-        context += doc.page_content + "\n"
+        context = ""
+        for doc in docs:
+            context += doc.page_content + "\n"
 
-    st.write("Context:", context)
+        model = genai.GenerativeModel("gemini-1.5-flash")
 
-    model = genai.GenerativeModel("gemini-1.5-flash")
-    prompt = f"""
-    You are an AI assistant. Answer the question based ONLY on the context below.
+        prompt = f"""
+        You are an AI assistant. Answer the question based ONLY on the context below.
 
-    Context:
-    {context}
+        Context:
+        {context}
 
-    Question:
-    {query}
+        Question:
+        {query}
 
-    Give a clear and short answer.
-    """
+        Give a clear and short answer.
+        """
 
-    response = model.generate_content(prompt)
+        response = model.generate_content(prompt)
 
-    st.write("Answer:", response.text)
+        st.subheader("🤖 AI Answer:")
+        st.write(response.text)
