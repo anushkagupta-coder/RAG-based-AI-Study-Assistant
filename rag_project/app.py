@@ -8,6 +8,7 @@ import streamlit as st
 import google.generativeai as genai
 
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+st.write("API KEY LOADED:", "GEMINI_API_KEY" in st.secrets)
 
 # Read PDF
 reader = PdfReader("rag_project/sample.pdf")
