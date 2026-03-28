@@ -61,8 +61,6 @@ if st.button("Get Answer"):
         """
         response = model.generate_content(prompt)
 
-        st.write("Raw response:", response)
-
         if response and hasattr(response, "text") and response.text:
             st.subheader("🤖 AI Answer:")
             st.write(response.text)
