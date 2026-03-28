@@ -59,8 +59,13 @@ if st.button("Get Answer"):
         Question:
         {query}
         """
-
         response = model.generate_content(prompt)
 
+        st.write("Raw response:", response)
+
+        if response and hasattr(response, "text") and response.text:
         st.subheader("🤖 AI Answer:")
         st.write(response.text)
+        else:
+        st.error("No valid response from Gemini")
+        st.subheader("🤖 AI Answer:")
