@@ -7,7 +7,6 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-# Load API key
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 
@@ -15,7 +14,6 @@ st.title("📚 AI Study Assistant 🤖")
 
 uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
 
-# 🔥 STORE VECTORSTORE IN SESSION
 if uploaded_file:
     reader = PdfReader(uploaded_file)
     
@@ -35,36 +33,31 @@ if uploaded_file:
 
     st.success("PDF processed successfully!")
 
-# Query input
 query = st.text_input("Ask a question:")
 
-# Button logic
 if st.button("Get Answer"):
     if "vectorstore" not in st.session_state:
         st.warning("Please upload a PDF first!")
     else:
         docs = st.session_state.vectorstore.similarity_search(query)
 
-        # 👇 YAHAN ADD KARNA HAI
-        st.write("Query:", query)
-        st.write("Docs found:", len(docs))
-
         context = ""
         for doc in docs:
             context += doc.page_content + "\n"
 
-        model = genai.GenerativeModel("gemini-2.5-flash")
+        model = genai.GenerativeModel("gemini-1.5-flash")  # safer
 
         prompt = f"""
-        You are an AI assistant. Answer the question based ONLY on the context below.
+        You are an AI assistant.
+
+        Answer ONLY from the context below.
+        Give a short and clear answer.
 
         Context:
         {context}
 
         Question:
         {query}
-
-        Give a clear and short answer.
         """
 
         response = model.generate_content(prompt)
