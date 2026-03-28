@@ -53,7 +53,7 @@ if st.button("Get Answer"):
         for doc in docs:
             context += doc.page_content + "\n"
 
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
 
         prompt = f"""
         You are an AI assistant. Answer the question based ONLY on the context below.

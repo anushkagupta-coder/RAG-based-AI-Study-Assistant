@@ -1,14 +1,23 @@
 from pypdf import PdfReader
+from langchain_text_splitters import CharacterTextSplitter
+from langchain_community.vectorstores import FAISS
+from langchain_community.embeddings import HuggingFaceEmbeddings
+import google.generativeai as genai
+import os
+from dotenv import load_dotenv
 
-reader = PdfReader("rag_project/sample.pdf")  # apna PDF naam yaha daalna
+# Load API key
+load_dotenv()
+genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+
+# Read PDF
+reader = PdfReader("rag_project/sample.pdf")
 
 text = ""
 for page in reader.pages:
     text += page.extract_text()
 
-print(text)
-from langchain_text_splitters import CharacterTextSplitter
-
+# Split text
 text_splitter = CharacterTextSplitter(
     separator="\n",
     chunk_size=500,
@@ -19,34 +28,16 @@ chunks = text_splitter.split_text(text)
 
 print("Total chunks:", len(chunks))
 
-for i, chunk in enumerate(chunks[:3]):  # first 3 chunks print
-    print(f"\n--- Chunk {i+1} ---\n")
-    print(chunk)
-
-
-from langchain_community.vectorstores import FAISS
-from langchain_community.embeddings import HuggingFaceEmbeddings
-
+# Embeddings + Vector DB
 embeddings = HuggingFaceEmbeddings()
-
 vectorstore = FAISS.from_texts(chunks, embeddings)
 
 print("Vector DB created successfully!")
 
-
-
-import os
-from dotenv import load_dotenv
-load_dotenv()
-api_key = os.getenv("GEMINI_API_KEY")
-
-
-import google.generativeai as genai
-
-genai.configure(api_key=api_key)
-
+# Gemini model
 model = genai.GenerativeModel("gemini-2.5-flash")
 
+# Ask question
 query = input("Ask a question: ")
 
 docs = vectorstore.similarity_search(query)
@@ -55,8 +46,12 @@ context = ""
 for doc in docs:
     context += doc.page_content + "\n"
 
+# Better prompt
 prompt = f"""
-Answer the question based on the context below:
+You are an AI assistant.
+
+Answer ONLY from the context below.
+Give a short and clear answer.
 
 Context:
 {context}
