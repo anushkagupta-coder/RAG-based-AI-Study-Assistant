@@ -45,7 +45,7 @@ if st.button("Get Answer"):
         for doc in docs:
             context += doc.page_content + "\n"
 
-        model = genai.GenerativeModel("gemini-1.5-flash")  # safer
+        model = genai.GenerativeModel("gemini-2.5-flash")  # safer
 
         prompt = f"""
         You are an AI assistant.
