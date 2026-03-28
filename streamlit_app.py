@@ -51,17 +51,17 @@ if st.button("Get Answer"):
 
     model = genai.GenerativeModel("gemini-1.5-flash")
     prompt = f"""
-You are an AI assistant. Answer the question based ONLY on the context below.
+    You are an AI assistant. Answer the question based ONLY on the context below.
 
-Context:
-{context}
+    Context:
+    {context}
 
-Question:
-{query}
+    Question:
+    {query}
 
-Give a clear and short answer.
-"""
+    Give a clear and short answer.
+    """
 
-response = model.generate_content(prompt)
+    response = model.generate_content(prompt)
 
     st.write("Answer:", response.text)
