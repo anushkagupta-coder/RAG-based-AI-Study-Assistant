@@ -38,7 +38,7 @@ if uploaded_file:
     st.success("PDF processed successfully!")
 
     # User query
-   query = st.text_input("Ask a question:")
+    query = st.text_input("Ask a question:")
 
 if st.button("Get Answer"):
     docs = vectorstore.similarity_search(query)
