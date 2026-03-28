@@ -38,27 +38,18 @@ if uploaded_file:
     st.success("PDF processed successfully!")
 
     # User query
-    query = st.text_input("Ask a question:")
+   query = st.text_input("Ask a question:")
 
-    if query:
-        docs = vectorstore.similarity_search(query)
+if st.button("Get Answer"):
+    docs = vectorstore.similarity_search(query)
 
-        context = ""
-        for doc in docs:
-            context += doc.page_content + "\n"
+    context = ""
+    for doc in docs:
+        context += doc.page_content + "\n"
 
-        prompt = f"""
-        Answer the question based on the context below:
+    st.write("Context:", context)
 
-        Context:
-        {context}
+    model = genai.GenerativeModel("gemini-1.5-flash")
+    response = model.generate_content(context + query)
 
-        Question:
-        {query}
-        """
-
-        model = genai.GenerativeModel("gemini-2.5-flash")
-        response = model.generate_content(prompt)
-
-        st.subheader("🤖 AI Answer:")
-        st.write(response.text)
+    st.write("Answer:", response.text)
