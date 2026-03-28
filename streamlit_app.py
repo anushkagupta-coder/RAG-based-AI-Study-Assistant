@@ -45,6 +45,10 @@ if st.button("Get Answer"):
     else:
         docs = st.session_state.vectorstore.similarity_search(query)
 
+        # 👇 YAHAN ADD KARNA HAI
+        st.write("Query:", query)
+        st.write("Docs found:", len(docs))
+
         context = ""
         for doc in docs:
             context += doc.page_content + "\n"
