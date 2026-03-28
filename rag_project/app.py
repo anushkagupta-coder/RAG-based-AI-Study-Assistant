@@ -41,7 +41,7 @@ if st.button("Get Answer"):
     if "vectorstore" not in st.session_state:
         st.warning("Please upload a PDF first!")
     else:
-        docs = st.session_state.vectorstore.similarity_search(query)
+        docs = st.session_state.vectorstore.similarity_search(query , k=2)
 
         st.write("Docs found:", len(docs))  # debug
 
