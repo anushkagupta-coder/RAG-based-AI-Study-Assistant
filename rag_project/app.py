@@ -3,12 +3,11 @@ from langchain_text_splitters import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import google.generativeai as genai
-import os
-from dotenv import load_dotenv
 
-# Load API key
-load_dotenv()
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
+import streamlit as st
+import google.generativeai as genai
+
+genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
 # Read PDF
 reader = PdfReader("rag_project/sample.pdf")
