@@ -41,7 +41,6 @@ st.title("📚 AI Study Assistant 🤖")
 if menu == "Upload PDF":
     
     uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
-    file_name = uploaded_file.name
     if uploaded_file:
         st.session_state.vectorstore = None
         file_name = uploaded_file.name
