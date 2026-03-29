@@ -12,9 +12,6 @@ menu = st.sidebar.radio(
     ["Upload PDF", "Chat with PDF", "Generate Quiz", "Summary"]
 )
 
-
-file_name = uploaded_file.name
-FAISS_PATH = f"faiss_index_{file_name}"
 # 
 from database import create_table, insert_chat, get_chat_history, clear_history
 
@@ -42,9 +39,9 @@ st.title("📚 AI Study Assistant 🤖")
 # 📌 PDF Upload Section
 # ========================
 if menu == "Upload PDF":
-    file_name = uploaded_file.name
+    
     uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
-
+    file_name = uploaded_file.name
     if uploaded_file:
         st.session_state.vectorstore = None
         file_name = uploaded_file.name
