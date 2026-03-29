@@ -7,6 +7,9 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
+from database import create_table, insert_chat, get_chat_history
+
+
 load_dotenv()
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
@@ -68,3 +71,4 @@ if st.button("Get Answer"):
         else:
             st.error("No valid response from Gemini")
             st.subheader("🤖 AI Answer:")
+

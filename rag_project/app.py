@@ -4,19 +4,39 @@ from langchain_text_splitters import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings import HuggingFaceEmbeddings
 import google.generativeai as genai
+import os
+from dotenv import load_dotenv
 
-# API KEY (Cloud)
-genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+
+FAISS_PATH = "faiss_index"
+# 
+from database import create_table, insert_chat, get_chat_history, clear_history
+
+load_dotenv()
+import os
+
+api_key = None
+
+# Try Streamlit secrets (for deployed app) if locally running then env file
+try:
+    # Try Streamlit secrets (for deployed app)
+    api_key = st.secrets["GEMINI_API_KEY"]
+except:
+    # Fallback to .env (local)
+    api_key = os.getenv("GEMINI_API_KEY")
+
+genai.configure(api_key=api_key)
+
+# 
+create_table()
 
 st.title("📚 AI Study Assistant 🤖")
 
-# Upload PDF
 uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
 
-# Store vector DB
 if uploaded_file:
     reader = PdfReader(uploaded_file)
-
+    
     text = ""
     for page in reader.pages:
         text += page.extract_text()
@@ -29,32 +49,40 @@ if uploaded_file:
     chunks = splitter.split_text(text)
 
     embeddings = HuggingFaceEmbeddings()
+
+if os.path.exists(FAISS_PATH):
+    # 🔥 LOAD existing index
+    st.session_state.vectorstore = FAISS.load_local(FAISS_PATH, embeddings, allow_dangerous_deserialization=True)
+    st.success("Loaded existing FAISS index!")
+else:
+    # 🔥 CREATE new index
     st.session_state.vectorstore = FAISS.from_texts(chunks, embeddings)
+    
+    # 🔥 SAVE it
+    st.session_state.vectorstore.save_local(FAISS_PATH)
+    st.success("FAISS index created and saved!")
 
     st.success("PDF processed successfully!")
 
-# User input
 query = st.text_input("Ask a question:")
 
-# Button
 if st.button("Get Answer"):
     if "vectorstore" not in st.session_state:
         st.warning("Please upload a PDF first!")
     else:
-        docs = st.session_state.vectorstore.similarity_search(query , k=2)
-
-        st.write("Docs found:", len(docs))  # debug
+        docs = st.session_state.vectorstore.similarity_search(query)
 
         context = ""
         for doc in docs:
             context += doc.page_content + "\n"
 
-        model = genai.GenerativeModel("gemini-1.5-flash")
+        model = genai.GenerativeModel("gemini-2.5-flash")
 
         prompt = f"""
         You are an AI assistant.
 
-        Answer ONLY from the context below.
+        Answer from the context below.
+        if answer is not in pdf use your knowledge 
         Give a short and clear answer.
 
         Context:
@@ -66,5 +94,27 @@ if st.button("Get Answer"):
 
         response = model.generate_content(prompt)
 
-        st.subheader("🤖 AI Answer:")
-        st.write(response.text)
+        if response and hasattr(response, "text") and response.text:
+            st.subheader("🤖 AI Answer:")
+            st.write(response.text)
+
+            # 🔥 ADD THIS (MOST IMPORTANT LINE)
+            insert_chat(query, response.text)
+
+        else:
+            st.error("No valid response from Gemini")
+            st.subheader("🤖 AI Answer:")
+
+# 🔥 SIDEBAR (already good, just added clear button)
+st.sidebar.title("Chat History")
+
+if st.sidebar.button("Clear History"):
+    clear_history()
+    st.sidebar.success("History Cleared")
+
+history = get_chat_history()
+
+for chat in history:
+    st.sidebar.write("Q:", chat[1])
+    st.sidebar.write("A:", chat[2])
+    st.sidebar.write("---")
