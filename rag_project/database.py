@@ -53,3 +53,27 @@ def clear_history():
 
     conn.commit()
     conn.close()
+
+def create_quiz_table():
+    conn = create_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS quizzes (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        content TEXT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+    )
+    """)
+
+    conn.commit()
+    conn.close()
+
+def insert_quiz(content):
+    conn = create_connection()
+    cursor = conn.cursor()
+
+    cursor.execute("INSERT INTO quizzes (content) VALUES (?)", (content,))
+    
+    conn.commit()
+    conn.close()
