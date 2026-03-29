@@ -13,7 +13,8 @@ menu = st.sidebar.radio(
 )
 
 
-FAISS_PATH = "faiss_index"
+file_name = uploaded_file.name
+FAISS_PATH = f"faiss_index_{file_name}"
 # 
 from database import create_table, insert_chat, get_chat_history, clear_history
 
@@ -44,6 +45,10 @@ if menu == "Upload PDF":
     uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
 
     if uploaded_file:
+        st.session_state.vectorstore = None
+        file_name = uploaded_file.name
+        FAISS_PATH = f"faiss_index_{file_name}"
+
         reader = PdfReader(uploaded_file)
         
         text = ""
@@ -61,15 +66,17 @@ if menu == "Upload PDF":
 
         if os.path.exists(FAISS_PATH):
             st.session_state.vectorstore = FAISS.load_local(
-                FAISS_PATH, embeddings, allow_dangerous_deserialization=True
+                FAISS_PATH,
+                embeddings,
+                allow_dangerous_deserialization=True
             )
-            st.success("Loaded existing FAISS index!")
+            st.success(f"Loaded FAISS for {file_name}")
         else:
             st.session_state.vectorstore = FAISS.from_texts(chunks, embeddings)
             st.session_state.vectorstore.save_local(FAISS_PATH)
-            st.success("FAISS index created and saved!")
+            st.success(f"Created FAISS for {file_name}")
 
-    st.success("PDF processed successfully!")
+        st.success("PDF processed successfully!")
 
 
 
