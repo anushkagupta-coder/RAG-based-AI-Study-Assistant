@@ -42,6 +42,7 @@ st.title("📚 AI Study Assistant 🤖")
 # 📌 PDF Upload Section
 # ========================
 if menu == "Upload PDF":
+    file_name = uploaded_file.name
     uploaded_file = st.file_uploader("Upload your PDF", type="pdf")
 
     if uploaded_file:
