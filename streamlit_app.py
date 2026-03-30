@@ -7,7 +7,7 @@ import google.generativeai as genai
 import os
 from dotenv import load_dotenv
 
-from database import create_table, insert_chat, get_chat_history
+from rag_project.database import create_table, insert_chat, get_chat_history
 
 
 load_dotenv()
