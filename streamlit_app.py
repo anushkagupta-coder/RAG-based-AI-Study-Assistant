@@ -87,7 +87,7 @@ menu = st.sidebar.radio(
 )
 
 # 
-from database import create_table, insert_chat, get_chat_history, clear_history
+from rag_project.database import create_table, insert_chat, get_chat_history, clear_history
 
 load_dotenv()
 
