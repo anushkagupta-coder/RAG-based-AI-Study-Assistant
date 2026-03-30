@@ -1,0 +1,116 @@
+/* Google Fonts connection */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Main Body and Font setup */
+html, body, [class*="css"] {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Hide default Streamlit elements */
+#MainMenu {visibility: hidden;}
+header {visibility: hidden;}
+footer {visibility: hidden;}
+
+/* Custom Scrollbar for a sleek look */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #8B5CF6;
+}
+
+/* Sidebar Glassmorphism */
+[data-testid="stSidebar"] {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-right: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Elegant Buttons */
+.stButton > button {
+    background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
+    border-color: transparent;
+    color: white;
+}
+
+.stButton > button:active {
+    transform: translateY(0px);
+}
+
+/* File Uploader styling */
+[data-testid="stFileUploader"] {
+    background: rgba(30, 41, 59, 0.5);
+    border: 1px dashed rgba(139, 92, 246, 0.5);
+    border-radius: 12px;
+    padding: 1rem;
+    transition: all 0.3s ease;
+}
+
+[data-testid="stFileUploader"]:hover {
+    border-color: #8B5CF6;
+    background: rgba(30, 41, 59, 0.8);
+}
+
+/* Cards / Expanders styling */
+[data-testid="stExpander"] {
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border-radius: 10px !important;
+    background: rgba(30, 41, 59, 0.4) !important;
+    overflow: hidden;
+}
+
+/* Chat Input Styling */
+[data-testid="stChatInput"] {
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    background: rgba(30, 41, 59, 0.8) !important;
+}
+
+[data-testid="stChatInput"]:focus-within {
+    border: 1px solid #8B5CF6 !important;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+}
+
+/* Headers and Titles */
+h1 {
+    font-weight: 700;
+    background: -webkit-linear-gradient(135deg, #a78bfa, #8b5cf6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+}
+
+h2, h3 {
+    color: #f8fafc;
+    font-weight: 600;
+}
+
+/* Metric / Info boxes */
+div[data-testid="stMarkdownContainer"] > div.info-box {
+    background: rgba(30, 41, 59, 0.6);
+    border-left: 4px solid #8B5CF6;
+    padding: 1rem;
+    border-radius: 0 8px 8px 0;
+    margin: 1rem 0;
+}
