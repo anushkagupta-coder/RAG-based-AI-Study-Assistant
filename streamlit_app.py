@@ -11,7 +11,7 @@ import os
 from dotenv import load_dotenv
 
 # ✅ ONLY ONE IMPORT (fix)
-from rag_project.database import (
+from database import (
     create_table, insert_chat, get_chat_history,
     clear_history, create_quiz_table, insert_quiz
 )
