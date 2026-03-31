@@ -1,9 +1,29 @@
 /* Google Fonts connection */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 /* Main Body and Font setup */
 html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Outfit', sans-serif;
+    cursor: default;
+}
+
+/* Base custom cursor - standard fallback, better done via JS but CSS hover is requested */
+body {
+    background-color: #050511;
+}
+
+/* Streamlit App Container */
+.stApp {
+    background: linear-gradient(-45deg, #050511, #12072B, #000000, #170A30);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: #f8fafc;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
 }
 
 /* Hide default Streamlit elements */
@@ -20,7 +40,7 @@ footer {visibility: hidden;}
     background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-    background: #475569;
+    background: #4C1D95;
     border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -29,88 +49,138 @@ footer {visibility: hidden;}
 
 /* Sidebar Glassmorphism */
 [data-testid="stSidebar"] {
-    background: rgba(30, 41, 59, 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(10, 10, 20, 0.7);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-right: 1px solid rgba(139, 92, 246, 0.2);
 }
 
-/* Elegant Buttons */
+/* Elegant Buttons - Nav and Main */
 .stButton > button {
-    background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: rgba(139, 92, 246, 0.1);
+    color: #e2e8f0;
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+    padding: 0.6rem 1.2rem;
+    font-weight: 500;
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
 }
 
+/* Neon glow hover effect */
 .stButton > button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(139, 92, 246, 0.4);
-    border-color: transparent;
-    color: white;
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.6), 0 0 30px rgba(168, 85, 247, 0.3);
+    border-color: #A855F7;
+    background: rgba(139, 92, 246, 0.25);
+    color: #ffffff;
 }
 
 .stButton > button:active {
-    transform: translateY(0px);
+    transform: translateY(1px);
+    box-shadow: 0 0 5px rgba(168, 85, 247, 0.6);
 }
+
+/* Active top buttons can be distinguished by specific props in streamlit, but fallback is hover */
 
 /* File Uploader styling */
 [data-testid="stFileUploader"] {
-    background: rgba(30, 41, 59, 0.5);
-    border: 1px dashed rgba(139, 92, 246, 0.5);
-    border-radius: 12px;
-    padding: 1rem;
-    transition: all 0.3s ease;
+    background: rgba(17, 12, 34, 0.6);
+    border: 2px dashed rgba(168, 85, 247, 0.4);
+    border-radius: 16px;
+    padding: 1.5rem;
+    transition: all 0.4s ease;
+    cursor: pointer;
 }
 
 [data-testid="stFileUploader"]:hover {
-    border-color: #8B5CF6;
-    background: rgba(30, 41, 59, 0.8);
+    border-color: #A855F7;
+    background: rgba(26, 17, 48, 0.8);
+    box-shadow: 0 0 20px rgba(168, 85, 247, 0.2);
+    transform: scale(1.01);
 }
 
 /* Cards / Expanders styling */
 [data-testid="stExpander"] {
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    border-radius: 10px !important;
-    background: rgba(30, 41, 59, 0.4) !important;
+    border: 1px solid rgba(168, 85, 247, 0.2) !important;
+    border-radius: 12px !important;
+    background: rgba(15, 10, 25, 0.6) !important;
     overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+[data-testid="stExpander"]:hover {
+    border-color: rgba(168, 85, 247, 0.5) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+[data-testid="stExpander"] details summary {
+    cursor: pointer;
+}
+
+/* Chat Messages */
+[data-testid="stChatMessage"] {
+    background: rgba(20, 15, 35, 0.5);
+    border-radius: 12px;
+    padding: 1rem;
+    border: 1px solid rgba(139, 92, 246, 0.1);
+    transition: all 0.3s ease;
+}
+
+[data-testid="stChatMessage"]:hover {
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.1);
 }
 
 /* Chat Input Styling */
 [data-testid="stChatInput"] {
     border-radius: 20px;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    background: rgba(30, 41, 59, 0.8) !important;
+    border: 1px solid rgba(139, 92, 246, 0.3) !important;
+    background: rgba(10, 10, 20, 0.9) !important;
+    transition: all 0.3s ease;
 }
 
 [data-testid="stChatInput"]:focus-within {
-    border: 1px solid #8B5CF6 !important;
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.2);
+    border: 1px solid #A855F7 !important;
+    box-shadow: 0 0 15px rgba(168, 85, 247, 0.4), inset 0 0 5px rgba(168, 85, 247, 0.2);
 }
 
 /* Headers and Titles */
-h1 {
-    font-weight: 700;
-    background: -webkit-linear-gradient(135deg, #a78bfa, #8b5cf6);
+.hero-title {
+    font-weight: 800;
+    font-size: 4rem;
+    margin-bottom: 0;
+    background: linear-gradient(135deg, #ffffff, #d8b4fe);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    letter-spacing: -0.5px;
+    letter-spacing: -1px;
+    text-shadow: 0 0 20px rgba(168, 85, 247, 0.3);
 }
 
-h2, h3 {
-    color: #f8fafc;
+h1, h2, h3 {
+    color: #e2e8f0;
     font-weight: 600;
 }
 
 /* Metric / Info boxes */
 div[data-testid="stMarkdownContainer"] > div.info-box {
-    background: rgba(30, 41, 59, 0.6);
-    border-left: 4px solid #8B5CF6;
-    padding: 1rem;
-    border-radius: 0 8px 8px 0;
-    margin: 1rem 0;
+    background: linear-gradient(90deg, rgba(20, 15, 35, 0.8), rgba(10, 10, 20, 0.4));
+    border-left: 4px solid #A855F7;
+    padding: 1.5rem;
+    border-radius: 0 12px 12px 0;
+    margin: 1.5rem 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+div[data-testid="stMarkdownContainer"] > div.info-box:hover {
+    background: linear-gradient(90deg, rgba(30, 20, 50, 0.9), rgba(10, 10, 20, 0.5));
+    border-left: 4px solid #d8b4fe;
+    transform: translateX(5px);
+}
+
+/* Global cursor for interactive elements to mimic custom pointer */
+input, textarea, select, a, summary, button {
+    cursor: pointer;
 }

@@ -1,6 +1,6 @@
 import streamlit as st
 
-st.set_page_config(page_title="AI Study Assistant", page_icon="📚", layout="centered")
+st.set_page_config(page_title="Learn Flow", page_icon="🌊", layout="centered")
 
 from pypdf import PdfReader
 from langchain_text_splitters import CharacterTextSplitter
@@ -50,23 +50,35 @@ create_quiz_table()
 # 🌟 HERO HEADER
 # ========================
 st.markdown("""
-<div style='text-align: center; padding: 2rem 0 3rem 0;'>
-    <h1 style='font-size: 3.5rem; margin-bottom: 0;'>📚 AI Study Assistant <span style='color: #8B5CF6;'>Pro</span></h1>
-    <p style='font-size: 1.2rem; color: #94a3b8; font-weight: 300;'>Upload, Chat, Quiz, and Summarize your documents seamlessly.</p>
+<div style='text-align: center; padding: 2rem 0 2rem 0;' class='hero-container'>
+    <h1 class='hero-title'>🌊 Learn <span style='color: #A855F7;'>Flow</span></h1>
+    <p style='font-size: 1.2rem; color: #cbd5e1; font-weight: 300;'>Upload, Chat, Quiz, and Summarize your documents seamlessly.</p>
 </div>
 """, unsafe_allow_html=True)
 
 # ========================
-# 📌 SIDEBAR / MENU
+# 📌 TOP NAVIGATION
+# ========================
+if 'current_menu' not in st.session_state:
+    st.session_state.current_menu = "Upload PDF"
+
+nav_cols = st.columns(4)
+if nav_cols[0].button("📤 Upload PDF", use_container_width=True):
+    st.session_state.current_menu = "Upload PDF"
+if nav_cols[1].button("💬 Chat", use_container_width=True):
+    st.session_state.current_menu = "Chat with PDF"
+if nav_cols[2].button("🧠 Quiz", use_container_width=True):
+    st.session_state.current_menu = "Generate Quiz"
+if nav_cols[3].button("📊 Summary", use_container_width=True):
+    st.session_state.current_menu = "Summary"
+
+menu = st.session_state.current_menu
+
+# ========================
+# 📌 SIDEBAR / HISTORY
 # ========================
 with st.sidebar:
-    st.markdown("<h2 style='text-align: center; margin-bottom: 20px;'>✨ Menu</h2>", unsafe_allow_html=True)
-    menu = st.radio(
-        "",
-        ["Upload PDF", "Chat with PDF", "Generate Quiz", "Summary"],
-        label_visibility="collapsed"
-    )
-    
+    st.markdown("<h3 style='text-align: center; margin-bottom: 20px; color: #A855F7;'>🕰️ History</h3>", unsafe_allow_html=True)
     st.markdown("---")
     
     with st.expander("🕰️ View Chat History"):
